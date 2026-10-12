@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asliddin va Marjona - To'y Taklifnomasi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f3e5ab;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Cormorant Garamond', serif;
+            background-color: #0a0a0a;
+            color: white;
+            overflow: hidden; /* Hide outer scrollbar */
+        }
+
+        .names-font {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        /* Scroll Snapping Container */
+        .snap-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            position: relative;
+            z-index: 10;
+        }
+
+        .snap-section {
+            scroll-snap-align: start;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Backgrounds with overlays */
+        .bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: -2;
+        }
+        .bg-darken {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.8));
+            z-index: -1;
+        }
+
+        /* Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .zoom-in {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+        }
+        .zoom-in.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Floating particles */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            background-color: rgba(212, 175, 55, 0.5); /* Gold */
+            border-radius: 50%;
+            animation: float 10s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        /* Custom Radio Buttons */
+        input[type="radio"] {
+            accent-color: var(--gold);
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 1rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .gold-text {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0a0a0a;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-out, visibility 1s;
+        }
+        
+        #intro-screen.hidden-intro {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .gift-box-container {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .gift-box-container:hover {
+            transform: scale(1.05);
+        }
+        .gift-lid {
+            width: 160px;
+            height: 40px;
+            background: linear-gradient(to bottom, #d4af37, #b38728);
+            border-radius: 4px;
+            position: relative;
+            z-index: 20;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease;
+        }
+        .gift-lid::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 100%;
+            background: #b91c1c; /* Qizil lenta */
+        }
+        .gift-bow {
+            position: absolute;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            gap: 2px;
+        }
+        .gift-bow-left, .gift-bow-right {
+            width: 30px;
+            height: 30px;
+            border: 4px solid #b91c1c;
+            border-radius: 50% 50% 0 50%;
+        }
+        .gift-bow-left {
+            transform: rotate(-25deg);
+        }
+        .gift-bow-right {
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(25deg);
+        }
+        .gift-body {
+            width: 140px;
+            height: 120px;
+            background: linear-gradient(to bottom, #cf9c27, #aa771c);
+            margin: 0 auto;
+            border-radius: 0 0 4px 4px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .gift-body::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 100%;
+            background: #b91c1c; /* Qizil lenta */
+        }
+        
+        #main-wrapper {
+            opacity: 0;
+            transition: opacity 1.5s ease-in 0.5s; /* Animatsiyadan so'ng ohista paydo bo'ladi */
+            pointer-events: none;
+        }
+        #main-wrapper.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro-screen">
+        <div class="gift-box-container" id="gift-box">
+            <div class="gift-lid" id="gift-lid">
+                <div class="gift-bow">
+                    <div class="gift-bow-left"></div>
+                    <div class="gift-bow-right"></div>
+                </div>
+            </div>
+            <div class="gift-body" id="gift-body"></div>
+        </div>
+        <p class="mt-12 text-2xl md:text-3xl font-serif text-gray-200 tracking-wider animate-pulse font-light text-center px-4" style="font-family: 'Cormorant Garamond', serif;">
+            Sovg'ani ochish uchun bosing
+        </p>
+    </div>
+
+    <!-- Asosiy sayt qutisi -->
+    <div id="main-wrapper">
+
+    <div id="particles"></div>
+
+    <div class="snap-container" id="main-container">
+
+        <!-- 1. Bosh sahifa -->
+        <section class="snap-section">
+            <div class="bg-overlay" style="background-image: url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1920&q=80');"></div>
+            <div class="bg-darken"></div>
+            
+            <div class="z-10 text-center px-4 fade-up">
+                <p class="text-xl md:text-2xl tracking-widest uppercase mb-4 text-gray-300">Bizning To'yimiz</p>
+                <h1 class="names-font text-6xl md:text-8xl gold-text mb-6 drop-shadow-lg">Asliddin & Marjona</h1>
+                <p class="text-2xl md:text-3xl italic text-gray-200 mb-8">20-Dekabr, 2026</p>
+                <div class="animate-bounce mt-10">
+                    <p class="text-sm tracking-widest uppercase text-gray-400 mb-2">Pastga suring</p>
+                    <svg class="w-6 h-6 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Taklif xati sahifasi -->
+        <section class="snap-section">
+            <div class="bg-overlay" style="background-image: url('https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1920&q=80');"></div>
+            <div class="bg-darken" style="background: rgba(10,10,10,0.85);"></div>
+            
+            <div class="z-10 text-center px-6 md:px-20 max-w-4xl zoom-in glass-card py-12">
+                <svg class="w-12 h-12 mx-auto text-yellow-500 mb-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <h2 class="text-3xl md:text-5xl font-semibold mb-6 gold-text">Taklifnoma</h2>
+                <p class="text-lg md:text-2xl leading-relaxed text-gray-200 mb-8">
+                    Hurmatli va aziz mehmon! <br><br>
+                    Sizni farzandlarimiz Asliddin va Marjonaning hayotidagi eng quvonchli kun — nikoh to'yi munosabati bilan yoziladigan dasturxonimizga lutfan taklif etamiz. Oila qurayotgan yoshlarning baxtli onlari va shodligiga sherik bo'ling!
+                </p>
+                <div class="mt-8 border-t border-gray-600 pt-6">
+                    <p class="text-xl md:text-2xl italic text-gray-300">To'y egalari:</p>
+                    <p class="text-2xl md:text-3xl font-semibold gold-text mt-4">[Kuyovning ota-onasi ismlari] oilasi</p>
+                    <p class="text-2xl md:text-3xl font-semibold gold-text mt-2">Sherbek va Klara Asadovlar oilasi</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Nahorgi Osh sahifasi -->
+        <section class="snap-section">
+            <div class="bg-overlay" style="background-image: url('https://images.unsplash.com/photo-1533143708019-ea5cfa80213e?auto=format&fit=crop&w=1920&q=80');"></div>
+            <div class="bg-darken" style="background: rgba(0,0,0,0.7);"></div>
+            
+            <div class="z-10 text-center px-4 fade-up">
+                <div class="mb-6 w-24 h-24 mx-auto border-2 border-yellow-500 rounded-full flex items-center justify-center bg-black/30">
+                    <!-- Morning Sun / Food icon -->
+                    <svg class="w-12 h-12 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </div>
+                <h2 class="names-font text-5xl md:text-7xl gold-text mb-4">Nahorgi Osh</h2>
+                <div class="glass-card p-6 inline-block mt-4">
+                    <p class="text-3xl md:text-4xl mb-2 text-white font-semibold">20 - Dekabr</p>
+                    <p class="text-2xl text-gray-300 border-b border-gray-500 pb-4 mb-4">Soat: 08:00 da</p>
+                    <p class="text-xl text-gray-200">Manzil: [To'yxona yoki Manzil nomi]</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Visol Oqshomi sahifasi -->
+        <section class="snap-section">
+            <div class="bg-overlay" style="background-image: url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1920&q=80');"></div>
+            <div class="bg-darken" style="background: rgba(0,0,0,0.7);"></div>
+            
+            <div class="z-10 text-center px-4 fade-up">
+                <div class="mb-6 w-24 h-24 mx-auto border-2 border-yellow-500 rounded-full flex items-center justify-center bg-black/30">
+                    <!-- Party / Evening icon -->
+                    <svg class="w-12 h-12 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                </div>
+                <h2 class="names-font text-5xl md:text-7xl gold-text mb-4">Visol Oqshomi</h2>
+                <div class="glass-card p-6 inline-block mt-4">
+                    <p class="text-3xl md:text-4xl mb-2 text-white font-semibold">20 - Dekabr</p>
+                    <p class="text-2xl text-gray-300 border-b border-gray-500 pb-4 mb-4">Soat: 18:00 da</p>
+                    <p class="text-xl text-gray-200">Manzil: [Restoran yoki Manzil nomi]</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. RSVP / Mehmon so'rovi sahifasi -->
+        <section class="snap-section bg-gray-900">
+            <!-- Subtle background pattern -->
+            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;"></div>
+            
+            <div class="z-10 w-full max-w-lg px-6 zoom-in">
+                <div class="glass-card p-8 text-center bg-black/40">
+                    <h2 class="text-3xl md:text-4xl font-semibold mb-6 gold-text">Tashrifingizni tasdiqlang</h2>
+                    <p class="text-lg text-gray-300 mb-8">To'yimizda ishtirok eta olasizmi?</p>
+                    
+                    <form id="rsvp-form" class="space-y-6 text-left">
+                        <div class="space-y-4">
+                            <label class="flex items-center space-x-4 cursor-pointer p-4 rounded-lg border border-gray-700 hover:bg-gray-800 transition">
+                                <input type="radio" name="attendance" value="yes" required>
+                                <span class="text-xl">Ha, albatta kelaman 🤍</span>
+                            </label>
+                            
+                            <label class="flex items-center space-x-4 cursor-pointer p-4 rounded-lg border border-gray-700 hover:bg-gray-800 transition">
+                                <input type="radio" name="attendance" value="no">
+                                <span class="text-xl">Afsuski, kela olmayman 🕊️</span>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="w-full py-4 mt-4 bg-yellow-600 hover:bg-yellow-500 text-white font-semibold text-xl rounded-lg transition shadow-[0_0_15px_rgba(212,175,55,0.4)]">
+                            Yuborish
+                        </button>
+                    </form>
+
+                    <!-- Success Message (Hidden by default) -->
+                    <div id="success-msg" class="hidden mt-8 text-2xl text-green-400 font-semibold italic">
+                        Javobingiz uchun rahmat!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Yakuniy sahifa -->
+        <section class="snap-section">
+            <div class="bg-overlay" style="background-image: url('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=1920&q=80');"></div>
+            <div class="bg-darken" style="background: rgba(0,0,0,0.6);"></div>
+            
+            <div class="z-10 text-center px-4 zoom-in flex flex-col items-center">
+                <!-- Simple CSS animated rings/infinity -->
+                <div class="relative w-32 h-32 mb-8 flex justify-center items-center">
+                    <div class="absolute w-20 h-20 border-4 border-yellow-500 rounded-full animate-ping opacity-75"></div>
+                    <div class="absolute w-24 h-24 border-2 border-white rounded-full"></div>
+                    <svg class="w-10 h-10 text-white z-10" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </div>
+                
+                <h1 class="text-6xl md:text-9xl gold-text font-bold mb-6 drop-shadow-2xl uppercase tracking-wider" style="line-height: 1.2;">
+                    Sizni kutib<br>qolamiz
+                </h1>
+                <p class="names-font text-4xl md:text-5xl text-white mt-4">Asliddin & Marjona</p>
+            </div>
+        </section>
+
+    </div>
+    </div> <!-- Close main-wrapper -->
+
+    <script>
+        const giftBox = document.getElementById('gift-box');
+        const giftLid = document.getElementById('gift-lid');
+        const giftBody = document.getElementById('gift-body');
+        const introScreen = document.getElementById('intro-screen');
+        const mainWrapper = document.getElementById('main-wrapper');
+
+        giftBox.addEventListener('click', function() {
+            // 1. Qopqoq tepaga qarab uchadi
+            giftLid.style.transform = 'translateY(-90px) rotate(-15deg)';
+            giftLid.style.opacity = '0';
+            
+            // 2. Quti o'zida ham kichik silkinish / kattalashish bo'ladi
+            giftBody.style.transform = 'scale(1.05)';
+            
+            // 3. Biroz kutib intro sahifani to'liq yo'q qilamiz
+            setTimeout(() => {
+                introScreen.classList.add('hidden-intro');
+                
+                // 4. Asosiy sahifani ohista ekranga chiqaramiz
+                mainWrapper.classList.add('visible');
+            }, 600); // 0.6 soniya qopqoq uchish vaqti
+        });
+
+
+        // --- 1. Scroll Animations Setup ---
+        // Intersection Observer to trigger animations when sections come into view
+        const observerOptions = {
+            root: document.querySelector('#main-container'),
+            threshold: 0.5 // Trigger when 50% of the section is visible
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Select all elements that need to animate
+        document.querySelectorAll('.fade-up, .zoom-in').forEach((el) => {
+            observer.observe(el);
+        });
+
+        // --- 2. Particles Generation ---
+        // Create floating gold particles in the background
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 20;
+
+        for (let i = 0; i < particleCount; i++) {
+            let particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random properties for natural look
+            let size = Math.random() * 8 + 2; // 2px to 10px
+            let left = Math.random() * 100; // 0% to 100%
+            let duration = Math.random() * 10 + 10; // 10s to 20s
+            let delay = Math.random() * 10; // 0s to 10s
+
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${left}%`;
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.animationDelay = `${delay}s`;
+
+            particlesContainer.appendChild(particle);
+        }
+
+        // --- 3. RSVP Form Handling ---
+        const rsvpForm = document.getElementById('rsvp-form');
+        const successMsg = document.getElementById('success-msg');
+
+        rsvpForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent page reload
+            
+            // Get selected value (in a real app, you'd send this to a server)
+            const selected = document.querySelector('input[name="attendance"]:checked').value;
+            
+            // Hide form and show success message
+            rsvpForm.style.display = 'none';
+            successMsg.classList.remove('hidden');
+            
+            // Optional: change message based on answer
+            if(selected === 'no') {
+                successMsg.innerHTML = "Tushunamiz, e'tiboringiz uchun rahmat! 🕊️";
+                successMsg.classList.replace('text-green-400', 'text-yellow-400');
+            }
+        });
+    </script>
+</body>
+</html>
